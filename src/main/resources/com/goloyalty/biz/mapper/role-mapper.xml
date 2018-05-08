@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.goloyalty.biz.mapper.RoleMapper">
+	<sql id="role_column">
+	    r.role_id, r.role_name, r.active, r.inst_id, date_format(r.inst_dtm, '%d/%m/%Y %H:%i:%s') as 'inst_dtm', r.mdf_id, date_format(r.mdf_dtm, '%d/%m/%Y %H:%i:%s') as 'mdf_dtm'
+	</sql> 
+	
+	<select id="findRoles" resultType="java.util.HashMap">
+		select
+			<include refid="role_column"/>
+		from role r
+	</select>
+</mapper>

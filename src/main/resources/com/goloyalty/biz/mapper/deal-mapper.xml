@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.goloyalty.biz.mapper.DealMapper">
+	<sql id="deal_column">
+	    d.deal_id, d.deal_name, d.deal_description, d.merchant_id, date_format(d.deal_start_dt, '%d/%m/%Y') as 'deal_start_dt', date_format(d.deal_end_dt, '%d/%m/%Y') as 'deal_end_dt', d.deal_location, d.deal_quantity, d.deal_quantity_user, d.deal_approval_status, d.deal_image, d.active, d.inst_id, date_format(d.inst_dtm, '%d/%m/%Y %H:%i:%s') as 'inst_dtm', d.mdf_id, date_format(d.mdf_dtm, '%d/%m/%Y %H:%i:%s') as 'mdf_dtm'
+	</sql>
+	
+	<sql id="merchant_column">
+	    m.merchant_id, m.merchant_name, m.company_no, m.representative_name, m.representative_email, m.representative_mobile, m.address, m.postcode, m.state, m.country, m.active, m.inst_id, date_format(m.inst_dtm, '%d/%m/%Y %H:%i:%s') as 'inst_dtm', m.mdf_id, date_format(m.mdf_dtm, '%d/%m/%Y %H:%i:%s') as 'mdf_dtm'
+	</sql>
+	
+	<select id="findById" resultType="java.util.HashMap">
+		select
+			<include refid="deal_column"/>
+		from deal d
+		where d.deal_id = #{id}
+	</select>
+	
+	<select id="findDeals" resultType="java.util.HashMap">
+		select
+			<include refid="deal_column"/>
+		from deal d
+	</select>
+	
+	<insert id="saveDeal">
+		insert into deal (
+			deal_id
+			, deal_name
+			, deal_description
+			, merchant_id
+			, deal_start_dt
+			, deal_end_dt
+			, deal_location
+			, deal_quantity
+			, deal_quantity_user
+			, deal_image
+			, deal_approval_status
+			, active
+			, inst_id
+			, inst_dtm
+		) values (
+			#{deal_id}
+			, #{deal_name}
+			, #{deal_description}
+			, #{merchant_id}
+			, #{deal_start_dt}
+			, #{deal_end_dt}
+			, #{deal_location}
+			, #{deal_quantity}
+			, #{deal_quantity_user}
+			, #{deal_image}
+			, #{deal_approval_status}
+			, #{active}
+			, #{inst_id}
+			, now()
+		)
+	</insert>
+	
+	<select id="countTotalActiveDeal" resultType="int">
+		select count(*)
+		from deal
+		where active = 'Y'
+	</select>
+	
+	<select id="findDashboardDeals" resultType="java.util.HashMap">
+		select
+			d.deal_id
+			, d.deal_name
+			, date_format(d.deal_start_dt, '%d/%m/%Y') as 'deal_start_dt'
+			, date_format(d.deal_end_dt, '%d/%m/%Y') as 'deal_end_dt'
+			, d.deal_image
+			, m.merchant_name
+		from deal d
+		left join merchant m on m.merchant_id = d.merchant_id
+		where d.deal_approval_status = 'Y' and d.active = 'Y'
+		order by d.inst_dtm desc
+		limit 5
+	</select>
+	
+<!-- 	<sql id="deal_column"> -->
+<!-- 	    d.deal_id, d.deal_name, d.deal_description, d.merchant_id, d.deal_start_dt, d.deal_end_dt, d.deal_quantity, d.deal_quantity_user, d.deal_location, d.deal_approval_status, d.active, d.inst_id, d.inst_dtm, d.mdf_id, d.mdf_dtm -->
+<!-- 	</sql> -->
+	
+<!-- 	<sql id="merchant_column"> -->
+<!-- 	    m.merchant_id, m.merchant_name, m.company_no, m.representative_name, m.representative_email, m.representative_mobile, m.address, m.postcode, m.state, m.country, m.active, m.inst_id, m.inst_dtm, m.mdf_id, m.mdf_dtm -->
+<!-- 	</sql> -->
+	
+<!-- 	<resultMap id="dealsAPIMap" type="com.goloyalty.api.model.Deal"> -->
+<!-- 		<id column="deal_id" property="deal_id" /> -->
+<!-- 	    <result column="deal_name" property="deal_name" /> -->
+<!-- 	    <result column="deal_description" property="deal_description" /> -->
+<!-- 	    <result column="merchant_id" property="merchant_id" /> -->
+<!-- 	    <result column="deal_start_dt" property="deal_start_dt" /> -->
+<!-- 	    <result column="deal_end_dt" property="deal_end_dt" /> -->
+<!-- 	    <result column="deal_quantity" property="deal_quantity" /> -->
+<!-- 	    <result column="deal_quantity_user" property="deal_quantity_user" /> -->
+<!-- 	    <result column="deal_location" property="deal_location" /> -->
+<!-- 	    <result column="deal_approval_status" property="deal_approval_status" /> -->
+<!-- 	    <result column="active" property="active" /> -->
+<!-- 	    <result column="inst_id" property="inst_id" /> -->
+<!-- 	    <result column="inst_dtm" property="inst_dtm" /> -->
+<!-- 	    <result column="mdf_id" property="mdf_id" /> -->
+<!-- 	    <result column="mdf_dtm" property="mdf_dtm" /> -->
+<!-- 	    <collection property="merchant" ofType="com.goloyalty.api.model.Merchant"> -->
+<!-- 		    <id property="merchant_id" column="merchant_id"/> -->
+<!-- 		    <result property="merchant_name" column="merchant_name"/> -->
+<!-- 		    <result property="company_no" column="company_no"/> -->
+<!-- 		    <result property="representative_name" column="representative_name"/> -->
+<!-- 		    <result property="representative_email" column="representative_email"/> -->
+<!-- 		    <result property="representative_mobile" column="representative_mobile"/> -->
+<!-- 		    <result property="address" column="address"/> -->
+<!-- 		    <result property="postcode" column="postcode"/> -->
+<!-- 		    <result property="state" column="state"/> -->
+<!-- 		    <result property="country" column="country"/> -->
+<!-- 		    <result property="active" column="active"/> -->
+<!-- 		    <result column="inst_id" property="inst_id" /> -->
+<!-- 		    <result column="inst_dtm" property="inst_dtm" /> -->
+<!-- 		    <result column="mdf_id" property="mdf_id" /> -->
+<!-- 		    <result column="mdf_dtm" property="mdf_dtm" /> -->
+<!-- 	  	</collection> -->
+<!-- 	</resultMap> -->
+	
+<!-- 	<select id="findDealsAPI" resultMap="dealsAPIMap"> -->
+<!-- 		select -->
+<!-- 			<include refid="deal_column"/> -->
+<!-- 			, <include refid="merchant_column"/> -->
+<!-- 		from deal d -->
+<!-- 		left join merchant m on m.merchant_id = d.merchant_id -->
+<!-- 	</select> -->
+</mapper>

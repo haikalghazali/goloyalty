@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.goloyalty.biz.mapper.MerchantMapper">
+	<sql id="merchant_column">
+	    m.merchant_id, m.merchant_name, m.company_no, m.representative_name, m.representative_email, m.representative_mobile, m.address, m.postcode, m.state, m.country, m.active, m.inst_id, date_format(m.inst_dtm, '%d/%m/%Y %H:%i:%s') as 'inst_dtm', m.mdf_id, date_format(m.mdf_dtm, '%d/%m/%Y %H:%i:%s') as 'mdf_dtm'
+	</sql>
+	
+	<select id="findById" resultType="java.util.HashMap">
+		select
+			<include refid="merchant_column"/>
+		from merchant m
+		where m.merchant_id = #{id}
+	</select>
+	
+	<select id="findMerchants" resultType="java.util.HashMap">
+		select
+			<include refid="merchant_column"/>
+		from merchant m
+	</select>
+	
+	<insert id="saveMerchant">
+		insert into merchant (
+			merchant_id
+			, merchant_name
+			, company_no
+			, representative_name
+			, representative_email
+			, representative_mobile
+			, address
+			, postcode
+			, state
+			, country
+			, active
+			, inst_id
+			, inst_dtm
+		) values (
+			#{merchant_id}
+			, #{merchant_name}
+			, #{company_no}
+			, #{representative_name}
+			, #{representative_email}
+			, #{representative_mobile}
+			, #{address}
+			, #{postcode}
+			, #{state}
+			, #{country}
+			, #{active}
+			, #{inst_id}
+			, now()
+		)
+	</insert>
+	
+	<update id="updateMerchant">
+		update
+			merchant
+		set merchant_name = #{merchant_name}
+			, company_no = #{company_no}
+			, representative_name = #{representative_name}
+			, representative_email = #{representative_email}
+			, representative_mobile = #{representative_mobile}
+			, address = #{address}
+			, postcode = #{postcode}
+			, state = #{state}
+			, country = #{country}
+			, active  = #{active}
+			, mdf_id = #{mdf_id}
+			, mdf_dtm = #{mdf_dtm}
+		where merchant_id = #{merchant_id}
+	</update>
+	
+	<select id="countTotalActiveMerchant" resultType="int">
+		select count(*)
+		from merchant
+		where active = 'Y'
+	</select>
+</mapper>

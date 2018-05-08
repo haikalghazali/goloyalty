@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.goloyalty.biz.mapper.CategoryMapper">
+	<sql id="category_column">
+	    c.category_id, c.category_name, c.active, c.inst_id, date_format(c.inst_dtm, '%d/%m/%Y %H:%i:%s') as 'inst_dtm', c.mdf_id, date_format(c.mdf_dtm, '%d/%m/%Y %H:%i:%s') as 'mdf_dtm'
+	</sql> 
+	
+	<select id="findCategories" resultType="java.util.HashMap">
+		select
+			<include refid="category_column"/>
+		from ref_category c
+	</select>
+	
+	<insert id="saveDealCategory">
+		insert into deal_category (
+			category_id
+			, deal_id
+			, inst_id
+			, inst_dtm
+		) values (
+			#{category_id}
+			, #{deal_id}
+			, #{inst_id}
+			, now()
+		)
+	</insert>
+	
+	<select id="findCategoriesById" resultType="java.util.HashMap">
+		select
+			category_id
+		from deal_category
+		where deal_id = #{deal_id}
+	</select>
+	
+	<select id="findById" resultType="java.util.HashMap">
+		select
+			<include refid="category_column"/>
+		from ref_category c
+		where c.category_id = #{id}
+	</select>
+	
+	<insert id="saveRefCategory">
+		insert into ref_category (
+			category_id
+			, category_name
+			, active
+			, inst_id
+			, inst_dtm
+		) values (
+			#{category_id}
+			, #{category_name}
+			, #{active}
+			, #{inst_id}
+			, now()
+		)
+	</insert>
+	
+	<update id="updateRefCategory">
+		update
+			ref_category
+		set category_name = #{category_name}
+			, active = #{active}
+			, mdf_id = #{mdf_id}
+			, mdf_dtm = now()
+		where category_id = #{category_id}
+	</update>
+</mapper>

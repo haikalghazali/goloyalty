@@ -1,0 +1,60 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+
+<!-- TABLE PAGE SCRIPTS -->
+<script type="text/javascript" src="${contextPath}/js/vendor/datatables/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="${contextPath}/js/vendor/datatables/dataTables.bootstrap.min.js"></script>
+<!-- END TABLE PAGE SCRIPTS -->
+
+<!-- START PAGE HEADING -->
+<div class="app-heading app-heading-bordered app-heading-page">
+    <div class="title">
+        <h1>Merchants</h1>
+    </div> 
+</div>
+<div class="app-heading-container app-heading-bordered bottom">
+    <ul class="breadcrumb">
+        <li><a href="#">Application</a></li>                                                     
+        <li><a href="/admin/dashboard" onclick="fnMenu('.menu-dashboard');">Dashboard</a></li>
+        <li class="active">Merchants</li>
+    </ul>
+</div>
+<!-- END PAGE HEADING -->
+
+<!-- START PAGE CONTAINER -->
+<div class="container">    
+    <div class="block block-condensed">
+        <div class="block-heading">
+    		<a href="/admin/merchant/new" class="btn btn-primary btn-clean">Register</a>
+    	</div>
+        <div class="block-content">
+            <table class="table table-striped table-bordered datatable-extended">
+                <thead>
+                    <tr>
+                        <th>Merchant Name</th>
+                        <th>Company No.</th>
+                        <th>Representative name</th>
+                        <th>Representative email</th>
+                        <th>Representative mobile</th>
+                        <th>Status</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                	<c:forEach var="merchants" items="${listMerchants}"  varStatus="loop">
+                    <tr>
+                        <td>${merchants.merchant_name}</td>
+                        <td>${merchants.company_no}</td>
+                        <td>${merchants.representative_name}</td>
+                        <td>${merchants.representative_email}</td>
+                        <td>${merchants.representative_mobile}</td>
+                        <td><c:choose><c:when test="${merchants.active == 'Y'}"><span class="label label-success">Active</span></c:when><c:otherwise><span class="label label-danger">Inactive</span></c:otherwise></c:choose></td>
+                        <td><a href="/admin/merchant/id/${merchants.merchant_id}" class="btn btn-primary btn-clean">Edit</a></td>
+                    </tr>
+                    </c:forEach>                               
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- END PAGE CONTAINER -->
